@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mua hàng</title>
+    <style>
+        /* Các style cơ bản giữ nguyên */
+        body {
+            background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+            color: #f5f5f5;
+            font-family: 'Orbitron', sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+        h1, h2 {
+            color: #ff073a;
+            text-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a;
+        }
+        a {
+            color: #ff073a;
+            text-decoration: none;
+            margin-right: 15px;
+            font-weight: bold;
+            text-shadow: 0 0 5px #ff073a;
+        }
+        a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a;
+        }
+        .search-form {
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px solid #ff073a;
+            border-radius: 8px;
+            background: rgba(30,30,30,0.85);
+        }
+        input, select, button {
+            margin: 5px 0;
+            padding: 8px;
+            border: 2px solid #ff073a;
+            border-radius: 5px;
+            background: #111;
+            color: #f5f5f5;
+            font-family: 'Orbitron', sans-serif;
+        }
+        button {
+            background: #ff073a;
+            cursor: pointer;
+            font-weight: bold;
+            text-shadow: 0 0 5px #000;
+            box-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a;
+            transition: all 0.2s ease-in-out;
+        }
+        button:hover {
+            background: #ff1e56;
+            transform: scale(1.05);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(20,20,20,0.9);
+            box-shadow: 0 0 15px #ff073a;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ff073a;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #ff073a;
+            color: #fff;
+            text-shadow: 0 0 5px #000;
+        }
+        tr:nth-child(even) {
+            background: #1e1e1e;
+        }
+        tr:hover {
+            background: #2a2a2a;
+            box-shadow: inset 0 0 10px #ff073a;
+        }
+        .nav-links {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(30,30,30,0.85);
+            border-radius: 8px;
+            border: 1px solid #ff073a;
+        }
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid #ff073a;
+        }
+        .success-message {
+            color: #00ff00;
+            padding: 10px;
+            background: rgba(0,255,0,0.1);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .total-section {
+            background: rgba(255,7,58,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ff073a;
+            margin: 20px 0;
+            text-align: right;
+        }
+        .total-amount {
+            color: #ff073a;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff073a;
+        }
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+        }
+
+        /* Bố cục mới với 2 cột */
+        .container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .products-section {
+            flex: 3;
+            min-width: 300px;
+        }
+        .cart-section {
+            flex: 2;
+            min-width: 300px;
+        }
+        .cart-container {
+            position: sticky;
+            top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .cart-container {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="nav-links">
+    <a href="/san-pham">Quản lý GEAR</a> |
+    <a href="/nha-san-xuat">Nhà sản xuất</a> |
+    <a href="/thong-ke">Thống kê</a> |
+    <a href="/mua-hang">Mua hàng</a> |
+    <!-- THÊM NÚT QUẢN LÝ TÀI KHOẢN -->
+    <a href="/quan-ly-tai-khoan">Quản lý tài khoản</a> |
+    <a href="/login">Đăng xuất</a>
+</div>
+
+<h1>CỬA HÀNG GEAR</h1>
+
+<!-- Thông báo thành công -->
+<div th:if="${param.success}" class="success-message">
+    ✅ Thanh toán thành công! Cảm ơn bạn đã mua hàng.
+</div>
+
+<!-- Search Form -->
+<div class="search-form">
+    <form action="/mua-hang" method="get">
+        <input type="text" name="search" placeholder="Tìm kiếm sản phẩm..." th:value="${searchKeyword}">
+        <button type="submit">Tìm kiếm</button>
+        <a th:if="${searchKeyword}" href="/mua-hang" style="margin-left: 10px;">Xóa tìm kiếm</a>
+    </form>
+</div>
+
+<div class="container">
+    <!-- Cột sản phẩm -->
+    <div class="products-section">
+        <h2>DANH SÁCH SẢN PHẨM</h2>
+        <table>
+            <tr>
+                <th>Hình ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Loại</th>
+                <th>Nhà sản xuất</th>
+                <th>Giá</th>
+                <th>Tồn kho</th>
+                <th>Số lượng mua</th>
+                <th>Thao tác</th>
+            </tr>
+            <tr th:each="sp : ${dsSanPham}">
+                <td><img th:src="${sp.hinhAnh}" alt="Product image" class="product-image"></td>
+                <td th:text="${sp.ten}"></td>
+                <td th:text="${sp.loai}"></td>
+                <td th:text="${sp.nhaSanXuat.ten}"></td>
+                <td th:text="${#numbers.formatDecimal(sp.gia,0,'COMMA',0,'POINT')} + ' đ'"></td>
+                <td th:text="${sp.soLuong}"></td>
+                <td>
+                    <form th:action="@{/mua-hang/them}" method="post" style="display: inline;">
+                        <input type="hidden" name="productId" th:value="${sp.id}">
+                        <input type="number" name="soLuong" value="1" min="1" th:max="${sp.soLuong}" class="quantity-input" required>
+                </td>
+                <td>
+                    <button type="submit">Thêm vào giỏ</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Cột giỏ hàng -->
+    <div class="cart-section">
+        <div class="cart-container">
+            <h2>GIỎ HÀNG</h2>
+            <div th:if="${gioHang.empty}">
+                <p style="text-align: center; color: #888; padding: 20px;">Giỏ hàng trống</p>
+            </div>
+
+            <div th:unless="${gioHang.empty}">
+                <table>
+                    <tr>
+                        <th>STT</th>
+                        <th>Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                        <th>Thao tác</th>
+                    </tr>
+                    <tr th:each="item, stat : ${gioHang}">
+                        <td th:text="${stat.index + 1}"></td>
+                        <td><img th:src="${item.sanPham.hinhAnh}" alt="Product image" class="product-image"></td>
+                        <td th:text="${item.sanPham.ten}"></td>
+                        <td th:text="${#numbers.formatDecimal(item.sanPham.gia,0,'COMMA',0,'POINT')} + ' đ'"></td>
+                        <td th:text="${item.soLuongMua}"></td>
+                        <td th:text="${#numbers.formatDecimal(item.thanhTien,0,'COMMA',0,'POINT')} + ' đ'"></td>
+                        <td>
+                            <a th:href="@{'/mua-hang/xoa/' + ${stat.index}}"
+                               onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')"
+                               style="color: #ff073a;">Xóa</a>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Tổng tiền và nút thanh toán -->
+                <div class="total-section">
+                    <h3>TỔNG TIỀN: <span class="total-amount" th:text="${#numbers.formatDecimal(tongTien,0,'COMMA',0,'POINT')} + ' đ'"></span></h3>
+                    <form th:action="@{/mua-hang/thanh-toan}" method="post">
+                        <button type="submit" onclick="return confirm('Xác nhận thanh toán?')"
+                                style="padding: 12px 30px; font-size: 18px;">
+                            🛒 THANH TOÁN
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

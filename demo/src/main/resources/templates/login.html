@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Đăng nhập</title>
+    <style>
+        body {background: linear-gradient(135deg, #0d0d0d, #1a1a1a);color: #f5f5f5;font-family: 'Orbitron', sans-serif;padding: 20px;display: flex;justify-content: center;align-items: center;height: 100vh;margin: 0;}
+        .login-container {background: rgba(30,30,30,0.95);padding: 40px;border-radius: 15px;border: 2px solid #ff073a;box-shadow: 0 0 20px #ff073a;text-align: center;width: 400px;}
+        h1 {color: #ff073a;text-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a;margin-bottom: 30px;}
+        input {width: 100%;padding: 12px;margin: 10px 0;border: 2px solid #ff073a;border-radius: 8px;background: #111;color: #f5f5f5;font-family: 'Orbitron', sans-serif;box-sizing: border-box;}
+        button {width: 100%;padding: 12px;margin: 10px 0;border: none;border-radius: 8px;background: #ff073a;color: white;font-family: 'Orbitron', sans-serif;font-weight: bold;cursor: pointer;text-shadow: 0 0 5px #000;box-shadow: 0 0 10px #ff073a;transition: all 0.2s ease-in-out;}
+        button:hover {background: #ff1e56;transform: scale(1.02);}
+        .error {color: #ff073a;margin: 10px 0;text-shadow: 0 0 5px #ff073a;}
+        .success {color: #00ff00;margin: 10px 0;text-shadow: 0 0 5px #00ff00;}
+        .links {margin-top: 20px;}
+        .links a {color: #ff073a;text-decoration: none;margin: 0 10px;text-shadow: 0 0 5px #ff073a;}
+        .links a:hover {color: #fff;text-shadow: 0 0 10px #ff073a;}
+        .register-section {margin-top: 25px;padding-top: 20px;border-top: 1px solid #ff073a;}
+        .register-button {background: transparent;border: 2px solid #ff073a;color: #ff073a;margin-top: 15px;}
+        .register-button:hover {background: #ff073a;color: white;}
+        .demo-accounts {margin-top: 20px; color: #888; font-size: 12px; background: rgba(255,7,58,0.1); padding: 15px; border-radius: 8px; border: 1px solid #ff073a;}
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h1>ĐĂNG NHẬP</h1>
+
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+    <div th:if="${success}" class="success" th:text="${success}"></div>
+
+    <form action="/login" method="post">
+        <input type="text" name="username" placeholder="Tên đăng nhập" required>
+        <input type="password" name="password" placeholder="Mật khẩu" required>
+        <button type="submit">Đăng nhập</button>
+    </form>
+
+    <!-- Phần đăng ký -->
+    <div class="register-section">
+        <p style="margin-bottom: 15px; color: #ccc;">Chưa có tài khoản?</p>
+        <a href="/register">
+            <button type="button" class="register-button">
+                🎮 ĐĂNG KÝ TÀI KHOẢN MỚI
+            </button>
+        </a>
+    </div>
+
+
+</div>
+</body>
+</html>

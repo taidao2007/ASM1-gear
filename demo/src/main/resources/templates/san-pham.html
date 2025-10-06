@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quản lý sản phẩm</title>
+    <style>
+        body {background: linear-gradient(135deg, #0d0d0d, #1a1a1a);color: #f5f5f5;font-family: 'Orbitron', sans-serif;padding: 20px;}
+        h1, h2 {color: #ff073a;text-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a;}
+        a {color: #ff073a;text-decoration: none;margin-right: 15px;font-weight: bold;text-shadow: 0 0 5px #ff073a;}
+        a:hover {color: #fff;text-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a;}
+        form {margin-bottom: 20px;padding: 15px;border: 2px solid #ff073a;border-radius: 8px;background: rgba(30,30,30,0.85);box-shadow: 0 0 15px #ff073a;}
+        input, select, button {margin: 5px 0;padding: 8px;border: 2px solid #ff073a;border-radius: 5px;background: #111;color: #f5f5f5;font-family: 'Orbitron', sans-serif;}
+        button {background: #ff073a;cursor: pointer;font-weight: bold;text-shadow: 0 0 5px #000;box-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a;transition: all 0.2s ease-in-out;}
+        button:hover {background: #ff1e56;transform: scale(1.05);}
+        table {width: 100%;border-collapse: collapse;background: rgba(20,20,20,0.9);box-shadow: 0 0 15px #ff073a;}
+        th, td {border: 1px solid #ff073a;padding: 10px;text-align: center;}
+        th {background: #ff073a;color: #fff;text-shadow: 0 0 5px #000;}
+        tr:nth-child(even) {background: #1e1e1e;}
+        tr:hover {background: #2a2a2a;box-shadow: inset 0 0 10px #ff073a;}
+        .search-form {margin: 20px 0;padding: 15px;border: 2px solid #ff073a;border-radius: 8px;background: rgba(30,30,30,0.85);}
+        .product-image {width: 80px;height: 80px;object-fit: cover;border-radius: 5px;border: 1px solid #ff073a;}
+        .nav-links {margin-bottom: 20px;padding: 15px;background: rgba(30,30,30,0.85);border-radius: 8px;border: 1px solid #ff073a;}
+        .image-preview {max-width: 200px;max-height: 200px;margin: 10px 0;border: 2px solid #ff073a;border-radius: 5px;}
+        .image-info {background: rgba(255,7,58,0.1);padding: 10px;border-radius: 5px;margin: 10px 0;border: 1px solid #ff073a;}
+    </style>
+    <script>
+        function updateImagePreview() {
+            var loai = document.getElementById('loai').value;
+            var preview = document.getElementById('imagePreview');
+
+            var imageUrl = '';
+            switch(loai) {
+                case 'Bàn phím':
+                    imageUrl = '/images/default-keyboard.jpg';
+                    break;
+                case 'Chuột':
+                    imageUrl = '/images/default-mouse.jpg';
+                    break;
+                case 'Tai nghe':
+                    imageUrl = '/images/default-headphone.jpg';
+                    break;
+                default:
+                    imageUrl = '/images/default-product.jpg';
+            }
+
+            preview.innerHTML = '<img src="' + imageUrl + '" class="image-preview" alt="Ảnh xem trước">';
+        }
+    </script>
+</head>
+<body>
+<div class="nav-links">
+    <a href="/san-pham">GEAR</a> |
+    <a href="/nha-san-xuat">Nhà sản xuất</a> |
+    <a href="/thong-ke">Thống kê</a> |
+    <a href="/mua-hang">Mua hàng</a> |
+    <!-- THÊM NÚT QUẢN LÝ TÀI KHOẢN -->
+    <a href="/quan-ly-tai-khoan">Quản lý tài khoản</a> |
+    <a href="/login">Đăng xuất</a>
+</div>
+
+<h1>Quản lý GEAR</h1>
+
+<!-- Search Form -->
+<div class="search-form">
+    <form action="/san-pham" method="get">
+        <input type="text" name="search" placeholder="Tìm kiếm sản phẩm..." th:value="${searchKeyword}">
+        <button type="submit">Tìm kiếm</button>
+        <a th:if="${searchKeyword}" href="/san-pham" style="margin-left: 10px;">Xóa tìm kiếm</a>
+    </form>
+</div>
+
+<h2 th:text="${sp.id} == null ? 'Thêm sản phẩm' : 'Cập nhật sản phẩm'"></h2>
+<form action="/san-pham/save" method="post">
+    <input type="hidden" name="id" th:value="${sp.id}">
+
+    Tên: <input type="text" name="ten" th:value="${sp.ten}" required><br>
+    Giá: <input type="number" step="0.01" name="gia" th:value="${sp.gia}" required><br>
+    Số lượng: <input type="number" name="soLuong" th:value="${sp.soLuong}" required><br>
+
+    Loại:
+    <select name="loai" id="loai" required onchange="updateImagePreview()">
+        <option value="">-- Chọn loại --</option>
+        <option value="Bàn phím" th:selected="${sp.loai == 'Bàn phím'}">Bàn phím</option>
+        <option value="Chuột" th:selected="${sp.loai == 'Chuột'}">Chuột</option>
+        <option value="Tai nghe" th:selected="${sp.loai == 'Tai nghe'}">Tai nghe</option>
+    </select><br>
+
+    <!-- Thông tin ảnh -->
+    <div class="image-info">
+        <h3>Ảnh sản phẩm</h3>
+        <p><strong>Hệ thống sẽ tự động chọn ảnh mặc định theo loại sản phẩm</strong></p>
+
+        <!-- Ảnh hiện tại (nếu có) -->
+        <div th:if="${sp.hinhAnh}">
+            <p>Ảnh hiện tại:</p>
+            <img th:src="${sp.hinhAnh}" alt="Current image" class="image-preview">
+        </div>
+
+        <!-- Ảnh xem trước -->
+        <div id="imagePreview">
+            <div th:if="${sp.loai}">
+                <p>Ảnh sẽ được sử dụng:</p>
+                <img th:src="@{${sp.loai == 'Bàn phím' ? '/images/default-keyboard.jpg' : (sp.loai == 'Chuột' ? '/images/default-mouse.jpg' : (sp.loai == 'Tai nghe' ? '/images/default-headphone.jpg' : '/images/default-product.jpg'))}}"
+                     alt="Preview image" class="image-preview">
+            </div>
+            <div th:unless="${sp.loai}">
+                <p>Vui lòng chọn loại sản phẩm để xem ảnh mặc định</p>
+            </div>
+        </div>
+
+    </div>
+
+    Nhà sản xuất:
+    <select name="nsxId" required>
+        <option value="">-- Chọn nhà sản xuất --</option>
+        <option th:each="nsx : ${dsNSX}" th:value="${nsx.id}" th:text="${nsx.ten}"
+                th:selected="${sp.nhaSanXuat != null and sp.nhaSanXuat.id == nsx.id}"></option>
+    </select><br>
+
+    <button type="submit" th:text="${sp.id} == null ? 'Thêm' : 'Cập nhật'"></button>
+</form>
+
+<h2>Danh sách sản phẩm</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Hình ảnh</th>
+        <th>Tên</th>
+        <th>Giá</th>
+        <th>Số lượng</th>
+        <th>Loại</th>
+        <th>Nhà sản xuất</th>
+        <th>Hành động</th>
+    </tr>
+    <tr th:each="sp : ${dsSanPham}">
+        <td th:text="${sp.id}"></td>
+        <td>
+            <img th:src="${sp.hinhAnh}"
+                 alt="Product image"
+                 class="product-image"
+                 onerror="this.src='/images/default-product.jpg'">
+        </td>
+        <td th:text="${sp.ten}"></td>
+        <td th:text="${#numbers.formatDecimal(sp.gia,0,'COMMA',0,'POINT')} + ' đ'"></td>
+        <td th:text="${sp.soLuong}"></td>
+        <td th:text="${sp.loai}"></td>
+        <td th:text="${sp.nhaSanXuat.ten}"></td>
+        <td>
+            <a th:href="@{'/san-pham/edit/' + ${sp.id}}">Sửa</a> |
+            <a th:href="@{'/san-pham/delete/' + ${sp.id}}"
+               onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">Xóa</a>
+        </td>
+    </tr>
+</table>
+
+<script>
+    // Cập nhật ảnh xem trước khi trang load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateImagePreview();
+    });
+</script>
+</body>
+</html>

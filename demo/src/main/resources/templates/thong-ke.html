@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thống kê</title>
+    <style>
+        body {background: linear-gradient(135deg, #0d0d0d, #1a1a1a);color: #f5f5f5;font-family: 'Orbitron', sans-serif;padding: 20px;}
+        h1, h2 {color: #ff073a;text-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a;}
+        a {color: #ff073a;text-decoration: none;margin-right: 15px;font-weight: bold;text-shadow: 0 0 5px #ff073a;}
+        a:hover {color: #fff;text-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a;}
+
+        table {width: 100%;margin-top: 20px;border-collapse: collapse;background: rgba(20,20,20,0.9);box-shadow: 0 0 15px #ff073a;}
+        th, td {border: 1px solid #ff073a;padding: 10px;text-align: center;}
+        th {background: #ff073a;color: #fff;text-shadow: 0 0 5px #000;}
+        tr:nth-child(even) {background: #1e1e1e;}
+        tr:hover {background: #2a2a2a;box-shadow: inset 0 0 10px #ff073a;}
+        .nav-links {margin-bottom: 20px;padding: 15px;background: rgba(30,30,30,0.85);border-radius: 8px;border: 1px solid #ff073a;}
+    </style>
+</head>
+<body>
+<div class="nav-links">
+    <a href="/san-pham">GEAR</a> |
+    <a href="/nha-san-xuat">Nhà sản xuất</a> |
+    <a href="/thong-ke">Thống kê</a> |
+    <a href="/mua-hang">Mua hàng</a> |
+    <!-- THÊM NÚT QUẢN LÝ TÀI KHOẢN -->
+    <a href="/quan-ly-tai-khoan">Quản lý tài khoản</a> |
+    <a href="/login">Đăng xuất</a>
+</div>
+
+<h1>Thống kê sản phẩm</h1>
+
+<h2>Thống kê sản phẩm theo loại và nhà sản xuất</h2>
+<table>
+    <tr>
+        <th>Nhà sản xuất</th>
+        <th>Chuột</th>
+        <th>Phím</th>
+        <th>Tai nghe</th>
+        <th>Tổng</th>
+    </tr>
+    <tr th:each="tk : ${thongKeList}">
+        <td th:text="${tk.tenNSX}"></td>
+        <td th:text="${tk.chuot}"></td>
+        <td th:text="${tk.phim}"></td>
+        <td th:text="${tk.tainghe}"></td>
+        <td th:text="${tk.tong}"></td>
+    </tr>
+</table>
+
+</body>
+</html>

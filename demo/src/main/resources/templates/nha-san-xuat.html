@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quản lý nhà sản xuất</title>
+    <style>
+        body {background: linear-gradient(135deg, #0d0d0d, #1a1a1a);color: #f5f5f5;font-family: 'Orbitron', sans-serif;padding: 20px;}
+        h1, h2 {color: #ff073a;text-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a;}
+        a {color: #ff073a;text-decoration: none;margin-right: 15px;font-weight: bold;text-shadow: 0 0 5px #ff073a;}
+        a:hover {color: #fff;text-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a;}
+        form {margin-bottom: 20px;padding: 15px;border: 2px solid #ff073a;border-radius: 8px;background: rgba(30,30,30,0.85);box-shadow: 0 0 15px #ff073a;}
+        input, button {margin: 5px 0;padding: 8px;border: 2px solid #ff073a;border-radius: 5px;background: #111;color: #f5f5f5;font-family: 'Orbitron', sans-serif;}
+        button {background: #ff073a;cursor: pointer;font-weight: bold;text-shadow: 0 0 5px #000;box-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a;transition: all 0.2s ease-in-out;}
+        button:hover {background: #ff1e56;transform: scale(1.05);}
+        table {width: 100%;border-collapse: collapse;background: rgba(20,20,20,0.9);box-shadow: 0 0 15px #ff073a;}
+        th, td {border: 1px solid #ff073a;padding: 10px;text-align: center;}
+        th {background: #ff073a;color: #fff;text-shadow: 0 0 5px #000;}
+        tr:nth-child(even) {background: #1e1e1e;}
+        tr:hover {background: #2a2a2a;box-shadow: inset 0 0 10px #ff073a;}
+        .nav-links {margin-bottom: 20px;padding: 15px;background: rgba(30,30,30,0.85);border-radius: 8px;border: 1px solid #ff073a;}
+    </style>
+</head>
+<body>
+<div class="nav-links">
+    <a href="/san-pham">GEAR</a> |
+    <a href="/nha-san-xuat">Nhà sản xuất</a> |
+    <a href="/thong-ke">Thống kê</a> |
+    <a href="/mua-hang">Mua hàng</a> |
+    <!-- THÊM NÚT QUẢN LÝ TÀI KHOẢN -->
+    <a href="/quan-ly-tai-khoan">Quản lý tài khoản</a> |
+    <a href="/login">Đăng xuất</a>
+</div>
+
+<h1>Quản lý nhà sản xuất</h1>
+
+<h2 th:text="${nsx.id} == null ? 'Thêm nhà sản xuất' : 'Cập nhật nhà sản xuất'"></h2>
+<form action="/nha-san-xuat/save" method="post">
+    <input type="hidden" name="id" th:value="${nsx.id}">
+    Tên: <input type="text" name="ten" th:value="${nsx.ten}"><br>
+    Quốc gia: <input type="text" name="quocGia" th:value="${nsx.quocGia}"><br>
+    Website: <input type="text" name="website" th:value="${nsx.website}"><br>
+    Email: <input type="email" name="email" th:value="${nsx.email}"><br>
+    SĐT: <input type="text" name="soDienThoai" th:value="${nsx.soDienThoai}"><br>
+    <button type="submit" th:text="${nsx.id} == null ? 'Thêm' : 'Cập nhật'"></button>
+</form>
+
+<h2>Danh sách nhà sản xuất</h2>
+<table>
+    <tr>
+        <th>ID</th><th>Tên</th><th>Quốc gia</th><th>Website</th><th>Email</th><th>SĐT</th><th>Hành động</th>
+    </tr>
+    <tr th:each="nsx : ${dsNSX}">
+        <td th:text="${nsx.id}"></td>
+        <td th:text="${nsx.ten}"></td>
+        <td th:text="${nsx.quocGia}"></td>
+        <td><a th:href="${nsx.website}" th:text="${nsx.website}" target="_blank"></a></td>
+        <td th:text="${nsx.email}"></td>
+        <td th:text="${nsx.soDienThoai}"></td>
+        <td>
+            <a th:href="@{'/nha-san-xuat/edit/' + ${nsx.id}}">Sửa</a> |
+            <a th:href="@{'/nha-san-xuat/delete/' + ${nsx.id}}">Xóa</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

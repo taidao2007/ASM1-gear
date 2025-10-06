@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Đăng ký tài khoản</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+            color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .register-container {
+            background: rgba(30,30,30,0.95);
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid #ff073a;
+            box-shadow: 0 0 20px #ff073a;
+            width: 500px;
+            max-width: 90%;
+        }
+        h1 {
+            color: #ff073a;
+            text-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 2px solid #ff073a;
+            border-radius: 8px;
+            background: #111;
+            color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input:focus {
+            outline: none;
+            border-color: #ff1e56;
+            box-shadow: 0 0 10px #ff073a;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            background: #ff073a;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            text-shadow: 0 0 5px #000;
+            box-shadow: 0 0 10px #ff073a;
+            transition: all 0.2s ease-in-out;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #ff1e56;
+            transform: scale(1.02);
+        }
+        .error {
+            color: #ff073a;
+            margin: 10px 0;
+            text-shadow: 0 0 5px #ff073a;
+            text-align: center;
+            background: rgba(255,7,58,0.1);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ff073a;
+        }
+        .success {
+            color: #00ff00;
+            margin: 10px 0;
+            text-shadow: 0 0 5px #00ff00;
+            text-align: center;
+            background: rgba(0,255,0,0.1);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #00ff00;
+        }
+        .links {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .links a {
+            color: #ff073a;
+            text-decoration: none;
+            margin: 0 10px;
+            text-shadow: 0 0 5px #ff073a;
+            font-weight: bold;
+        }
+        .links a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #ff073a;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ff073a;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .back-button {
+            background: transparent;
+            border: 2px solid #ff073a;
+            color: #ff073a;
+            margin-top: 10px;
+        }
+        .back-button:hover {
+            background: #ff073a;
+            color: white;
+        }
+        .required {
+            color: #ff073a;
+        }
+        .password-requirements {
+            color: #888;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <h1>🎮 ĐĂNG KÝ TÀI KHOẢN</h1>
+
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+    <div th:if="${success}" class="success" th:text="${success}"></div>
+
+    <form action="/register" method="post">
+        <div class="form-group">
+            <label for="fullName">Họ và tên: <span class="required">*</span></label>
+            <input type="text" id="fullName" name="fullName" th:value="${user.fullName}" required
+                   placeholder="Nhập họ và tên đầy đủ">
+        </div>
+
+        <div class="form-group">
+            <label for="username">Tên đăng nhập: <span class="required">*</span></label>
+            <input type="text" id="username" name="username" th:value="${user.username}" required
+                   placeholder="Chọn tên đăng nhập" minlength="3">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email: <span class="required">*</span></label>
+            <input type="email" id="email" name="email" th:value="${user.email}" required
+                   placeholder="example@email.com">
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Số điện thoại: <span class="required">*</span></label>
+            <input type="tel" id="phone" name="phone" th:value="${user.phone}" required
+                   placeholder="0123456789">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mật khẩu: <span class="required">*</span></label>
+            <input type="password" id="password" name="password" required minlength="6"
+                   placeholder="Ít nhất 6 ký tự">
+            <div class="password-requirements">Mật khẩu phải có ít nhất 6 ký tự</div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Xác nhận mật khẩu: <span class="required">*</span></label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required minlength="6"
+                   placeholder="Nhập lại mật khẩu">
+        </div>
+
+        <button type="submit">🚀 ĐĂNG KÝ NGAY</button>
+    </form>
+
+    <!-- Nút quay lại đăng nhập -->
+    <a href="/login">
+        <button type="button" class="back-button">
+            ↩️ QUAY LẠI ĐĂNG NHẬP
+        </button>
+    </a>
+
+
+
+    <div style="margin-top: 20px; color: #888; font-size: 12px; text-align: center;">
+        <p><span class="required">*</span> Thông tin bắt buộc</p>
+        <p>Bằng cách đăng ký, bạn đồng ý với điều khoản sử dụng của chúng tôi</p>
+    </div>
+</div>
+
+<script>
+    // Kiểm tra mật khẩu khớp
+    document.getElementById('confirmPassword').addEventListener('input', function() {
+        var password = document.getElementById('password').value;
+        var confirmPassword = this.value;
+
+        if (password !== confirmPassword && confirmPassword.length > 0) {
+            this.style.borderColor = '#ff073a';
+            this.style.boxShadow = '0 0 10px #ff073a';
+        } else {
+            this.style.borderColor = '#ff073a';
+            this.style.boxShadow = 'none';
+        }
+    });
+
+    // Kiểm tra độ dài mật khẩu
+    document.getElementById('password').addEventListener('input', function() {
+        if (this.value.length < 6 && this.value.length > 0) {
+            this.style.borderColor = '#ff073a';
+            this.style.boxShadow = '0 0 10px #ff073a';
+        } else {
+            this.style.borderColor = '#ff073a';
+            this.style.boxShadow = 'none';
+        }
+    });
+</script>
+</body>
+</html>
